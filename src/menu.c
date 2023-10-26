@@ -2,9 +2,13 @@
 
 char w[] = "Hello, alex!\r\n";
 
-void main() {
+void printMe() {
     printf("Hello, world!\r\n%s\nPTR is: %x\r\n", w, w);
     
     char c = getchar();
     printf("Char code: %x\r\n", c);
+}
+
+void main() {
+    printMe();
 }

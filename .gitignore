@@ -1,2 +1,6 @@
 out/
 menu.bin
+menu_unittest
+
+*.o
+*.a
