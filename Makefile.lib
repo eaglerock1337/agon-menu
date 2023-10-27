@@ -1,0 +1,39 @@
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+
+SRC=$(call rwildcard,src,*.h) src/menu.c
+INC=$(call rwildcard,include,*.h)
+
+MOSLIBSRC=lib/mos-interface.asm lib/mos_api.inc
+MOSLIB=out/mos-interface.rel
+VDPLIBSRC=lib/vdp.c $(INC)
+VDPLIB=out/vdp.o
+
+CC=sdcc
+LD=sdcc
+AS=sdasz80
+CLD=sdldz80
+OBJCPY=sdobjcopy
+
+ASFLAGS=-plosgff
+CFLAGS=-mez80_z80 -Iinclude/ -Isrc/include/ --reserve-regs-iy --std-c11 --fno-omit-frame-pointer
+CLINK=--no-std-crt0 -mez80_z80 --code-loc 100
+
+OFILES =  \
+	$(ZILOG_INC)\menu.o
+
+all: a.bin
+
+$(MOSLIB): $(MOSLIBSRC)
+	$(AS) $(ASFLAGS) -o $(MOSLIB) lib/mos-interface.asm
+
+$(VDPLIB): $(VDPLIBSRC)
+	$(CC) $(CFLAGS) -o $(VDPLIB) lib/vdp.c
+
+a.bin: $(SRC) $(INC) out/mos-interface.rel out/vdp.o 
+		$(CC) $(CFLAGS) $(MOSLIB) src/menu.c -o out/menu.ihx
+		$(LD) $(CLINK) $(VDPLIB) $(MOSLIB) out/menu.rel -o out/a.ihx
+		$(CLD) -nf out/a.lk
+		$(OBJCPY) -I ihex -O binary out/a.ihx menu.bin
+
+clean:
+		rm -rf out/*.* out/*  menu.bin
