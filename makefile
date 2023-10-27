@@ -20,16 +20,24 @@ CLINK=--no-std-crt0 -mez80_z80 --code-loc 100
 all: a.bin
 
 $(CRT): crt/crt0.s
-		$(AS) $(ASFLAGS) -o $(CRT) crt/crt0.s
+	$(AS) $(ASFLAGS) -o $(CRT) crt/crt0.s
 
 $(MOSLIB): $(MOSLIBSRC)
-		$(AS) $(ASFLAGS) -o $(MOSLIB) lib/mos.s
+	$(AS) $(ASFLAGS) -o $(MOSLIB) lib/mos.s
 
 a.bin: $(SRC) $(INC) $(CRT) $(MOSLIB) 
-		$(CC) $(CFLAGS) $(MOSLIB) src/menu.c -o out/menu.ihx
-		$(LD) $(CLINK) $(CRT) $(MOSLIB) out/menu.rel -o out/a.ihx
-		$(CLD) -nf out/a.lk
-		$(OBJCPY) -I ihex -O binary out/a.ihx menu.bin
+	$(CC) $(CFLAGS) $(MOSLIB) src/menu.c -o out/menu.ihx
+	$(LD) $(CLINK) $(CRT) $(MOSLIB) out/menu.rel -o out/a.ihx
+	$(CLD) -nf out/a.lk
+	$(OBJCPY) -I ihex -O binary out/a.ihx menu.bin
 
 clean:
 		rm -rf out/*.* out/*  menu.bin
+
+.PHONY: test
+test:
+	$(MAKE) -C test
+
+.PHONY: testclean
+testclean:
+	$(MAKE) -C test clean

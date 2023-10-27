@@ -1,14 +1,13 @@
 #include <stdio.h>
 
-char w[] = "Hello, alex!\r\n";
+char w[] = "Hello, world!\r\n";
 
-void printMe() {
-    printf("Hello, world!\r\n%s\nPTR is: %p\r\n", w, w);
-    
-    char c = getchar();
-    printf("Char code: %x\r\n", c);
+int printHello() {
+    printf("Hello, world!");
+    return 0;
 }
 
-void main() {
-    printMe();
+int menu() {
+    int code = printHello();
+    return code;
 }

@@ -4,6 +4,6 @@ extern "C" {
 #include "../src/menu.h"
 }
 
-TEST(menuTest, printMeFunctionThrowsNoErrors) {
-  ASSERT_NO_THROW(printMe());
+TEST(menu, printHelloFunctionThrowsNoErrors) {
+  ASSERT_NO_THROW(printHello());
 }
